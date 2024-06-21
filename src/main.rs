@@ -1,20 +1,14 @@
 use ntex::web;
-use std::sync::Mutex;
 
 struct AppState {
     app_name: String,
 }
 
-struct AppStateWithCounter {
-    counter: Mutex<i32>,
-}
-
 #[web::get("/")]
-async fn index(data: web::types::State<AppStateWithCounter>) -> String {
-    let mut counter = data.counter.lock().unwrap();
-    *counter += 1;
+async fn index(data: web::types::State<AppState>) -> String {
+    let app_name = &data.app_name;
 
-    format!("Request number: {counter}")
+    format!("Hello {app_name}!")
 }
 
 #[ntex::main]
